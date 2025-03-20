@@ -1,6 +1,6 @@
 // Constants
 const API_URL = "https://pokeapi-proxy.freecodecamp.rocks/api/pokemon/";
-const MAX_STAT = 255; // Maximum possible stat value in Pokémon
+const MAX_STAT = 255;
 
 // DOM Elements
 const searchInput = document.getElementById("search-input");
@@ -18,7 +18,6 @@ const specialDefenseElement = document.getElementById("special-defense");
 const speedElement = document.getElementById("speed");
 const spriteContainer = document.querySelector(".sprite-container");
 
-// Event Listeners
 searchButton.addEventListener("click", searchPokemon);
 searchInput.addEventListener("keypress", (e) => {
   if (e.key === "Enter") {
@@ -35,7 +34,6 @@ async function searchPokemon() {
   }
 
   try {
-    // Add loading animation
     addLoadingAnimation();
 
     const response = await fetch(`${API_URL}${searchTerm}`);
@@ -51,7 +49,6 @@ async function searchPokemon() {
     alert("Pokémon not found");
     resetDisplay();
   } finally {
-    // Remove loading animation
     removeLoadingAnimation();
   }
 }
@@ -59,13 +56,11 @@ async function searchPokemon() {
 function addLoadingAnimation() {
   document.body.classList.add("loading");
 
-  // Add spinner to sprite container
   const spinner = document.createElement("div");
   spinner.className = "loading-spinner";
   spriteContainer.innerHTML = "";
   spriteContainer.appendChild(spinner);
 
-  // Reset stats bars
   document.querySelectorAll(".stat-bar").forEach((bar) => {
     bar.style.width = "0%";
   });
@@ -76,13 +71,11 @@ function removeLoadingAnimation() {
 }
 
 function displayPokemonData(pokemon) {
-  // Set basic info
   pokemonName.textContent = pokemon.name.toUpperCase();
   pokemonId.textContent = `#${pokemon.id}`;
   weightElement.textContent = `Weight: ${pokemon.weight}`;
   heightElement.textContent = `Height: ${pokemon.height}`;
 
-  // Clear and set types
   typesElement.innerHTML = "";
   pokemon.types.forEach((typeInfo) => {
     const typeElement = document.createElement("span");
@@ -91,7 +84,6 @@ function displayPokemonData(pokemon) {
     typesElement.appendChild(typeElement);
   });
 
-  // Set sprite
   spriteContainer.innerHTML = "";
   const spriteImg = document.createElement("img");
   spriteImg.id = "sprite";
@@ -99,44 +91,36 @@ function displayPokemonData(pokemon) {
   spriteImg.alt = pokemon.name;
   spriteContainer.appendChild(spriteImg);
 
-  // Find stats and set values with animation
   const stats = pokemon.stats;
 
-  // HP
   const hpStat = stats.find((stat) => stat.stat.name === "hp");
   hpElement.textContent = hpStat.base_stat;
   animateStatBar(".hp-bar", hpStat.base_stat);
 
-  // Attack
   const attackStat = stats.find((stat) => stat.stat.name === "attack");
   attackElement.textContent = attackStat.base_stat;
   animateStatBar(".attack-bar", attackStat.base_stat);
 
-  // Defense
   const defenseStat = stats.find((stat) => stat.stat.name === "defense");
   defenseElement.textContent = defenseStat.base_stat;
   animateStatBar(".defense-bar", defenseStat.base_stat);
 
-  // Special Attack
   const specialAttackStat = stats.find(
     (stat) => stat.stat.name === "special-attack"
   );
   specialAttackElement.textContent = specialAttackStat.base_stat;
   animateStatBar(".special-attack-bar", specialAttackStat.base_stat);
 
-  // Special Defense
   const specialDefenseStat = stats.find(
     (stat) => stat.stat.name === "special-defense"
   );
   specialDefenseElement.textContent = specialDefenseStat.base_stat;
   animateStatBar(".special-defense-bar", specialDefenseStat.base_stat);
 
-  // Speed
   const speedStat = stats.find((stat) => stat.stat.name === "speed");
   speedElement.textContent = speedStat.base_stat;
   animateStatBar(".speed-bar", speedStat.base_stat);
 
-  // Add a subtle animation to the new data
   addDataRevealAnimation();
 }
 
@@ -144,10 +128,8 @@ function animateStatBar(selector, value) {
   const bar = document.querySelector(selector);
   const percentage = (value / MAX_STAT) * 100;
 
-  // Ensure percentage doesn't exceed 100%
   const cappedPercentage = Math.min(percentage, 100);
 
-  // Use setTimeout to ensure the animation works (browser needs time to process the initial 0%)
   setTimeout(() => {
     bar.style.width = `${cappedPercentage}%`;
   }, 50);
@@ -159,13 +141,10 @@ function addDataRevealAnimation() {
   );
 
   elements.forEach((element, index) => {
-    // Remove any existing animation classes
     element.classList.remove("data-reveal");
 
-    // Force a reflow (repaint) of the element
     void element.offsetWidth;
 
-    // Add animation class with staggered delay
     element.style.animationDelay = `${index * 0.05}s`;
     element.classList.add("data-reveal");
   });
@@ -184,16 +163,13 @@ function resetDisplay() {
   specialDefenseElement.textContent = "–––";
   speedElement.textContent = "–––";
 
-  // Reset sprite
   spriteContainer.innerHTML = "";
 
-  // Reset stat bars
   document.querySelectorAll(".stat-bar").forEach((bar) => {
     bar.style.width = "0%";
   });
 }
 
-// Additional CSS for animations
 const style = document.createElement("style");
 style.textContent = `
   .loading-spinner {
@@ -225,22 +201,17 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// Initialize the app
 function init() {
-  // Focus the search input
   searchInput.focus();
 
-  // Add futuristic UI sound effects
   document.addEventListener("DOMContentLoaded", addSoundEffects);
 }
 
 function addSoundEffects() {
-  // Button sound effect
   searchButton.addEventListener("mousedown", () => {
     playSound(220, 0.05);
   });
 
-  // Input focus sound
   searchInput.addEventListener("focus", () => {
     playSound(440, 0.05);
   });
@@ -275,5 +246,4 @@ function playSound(frequency, duration) {
   }
 }
 
-// Initialize the app
 init();
